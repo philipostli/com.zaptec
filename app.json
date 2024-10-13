@@ -6,7 +6,8 @@
   "sdk": 3,
   "brandColor": "#19312F",
   "platforms": [
-    "local"
+    "local",
+    "cloud"
   ],
   "name": {
     "en": "Zaptec"
@@ -30,13 +31,6 @@
   "bugs": {
     "url": "https://github.com/patricke94/com.zaptec/issues"
   },
-  "contributors": {
-    "developers": [
-      {
-        "name": "Philip Østli"
-      }
-    ]
-  },
   "contributing": {
     "donate": {
       "paypal": {
@@ -48,7 +42,6 @@
   "dependencies": {
     "net": "*"
   },
-  "homepage": "https://www.zaptec.com/",
   "flow": {
     "triggers": [
       {
@@ -894,7 +887,8 @@
         "xlarge": "/drivers/go/assets/images/driver_xlarge.png"
       },
       "platforms": [
-        "local"
+        "local",
+        "cloud"
       ],
       "connectivity": [
         "cloud"
@@ -1044,7 +1038,8 @@
         "xlarge": "/drivers/home/assets/images/driver_xlarge.png"
       },
       "platforms": [
-        "local"
+        "local",
+        "cloud"
       ],
       "connectivity": [
         "cloud"
@@ -1192,7 +1187,8 @@
         "xlarge": "/drivers/pro/assets/images/driver_xlarge.png"
       },
       "platforms": [
-        "local"
+        "local",
+        "cloud"
       ],
       "connectivity": [
         "cloud"
