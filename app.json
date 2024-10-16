@@ -6,7 +6,8 @@
   "sdk": 3,
   "brandColor": "#19312F",
   "platforms": [
-    "local"
+    "local",
+    "cloud"
   ],
   "name": {
     "en": "Zaptec"
@@ -967,7 +968,8 @@
         }
       },
       "platforms": [
-        "local"
+        "local",
+        "cloud"
       ],
       "connectivity": [],
       "images": {
@@ -1112,7 +1114,8 @@
         }
       },
       "platforms": [
-        "local"
+        "local",
+        "cloud"
       ],
       "connectivity": [],
       "images": {
@@ -1257,7 +1260,8 @@
         }
       },
       "platforms": [
-        "local"
+        "local",
+        "cloud"
       ],
       "connectivity": [],
       "images": {

@@ -77,7 +77,8 @@
     }
   },
   "platforms": [
-    "local"
+    "local",
+    "cloud"
   ],
   "connectivity": [],
   "images": {
