@@ -42,6 +42,7 @@
   "dependencies": {
     "net": "*"
   },
+  "homeyCommunityTopicId": "118631",
   "flow": {
     "triggers": [
       {

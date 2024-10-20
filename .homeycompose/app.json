@@ -40,5 +40,6 @@
   "source": "https://github.com/patricke94/com.zaptec",
   "dependencies": {
     "net": "*"
-  }
+  },
+  "homeyCommunityTopicId": "118631"
 }
