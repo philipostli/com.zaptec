@@ -8,6 +8,7 @@ import {
   chargerOperationModeStr,
   chargerOperationModeFromStr,
 } from '../../lib/zaptec';
+import { ApiError } from '../../lib/zaptec/error';
 import { ChargerStateModel } from '../../lib/zaptec/models';
 
 export class ProCharger extends Homey.Device {
@@ -213,6 +214,16 @@ export class ProCharger extends Homey.Device {
     const year = new Date().getFullYear();
 
     this.api
+      .getInstallation(this.getData().installationId)
+      .then((installation) => {
+        if (installation.Id === this.getData().installationId)
+          this.setStoreValue('installationAvailable', true );
+      })
+      .catch((e) => {
+        this.logToDebug(`Failed to poll installation: ${e}`);
+      });
+
+    this.api
       .getChargeHistory({
         ChargerId: this.getData().id,
         From: new Date(year, 0, 1, 0, 0, 1).toJSON(),
@@ -345,10 +356,12 @@ export class ProCharger extends Homey.Device {
    * Poll the available current for the installation.
    */
   protected async pollAvailableCurrent() {
-    if (this.api === undefined) return;
+    if (this.api === undefined || this.getStoreValue('installationAvailable') === false) return;
     const info = await this.api
       .getInstallation(this.getData().installationId)
-      .catch((e) => {
+      .catch((e) => {     
+        if (e instanceof ApiError && e.message.indexOf('Unknown object') >= 0)
+          this.setStoreValue('installationAvailable', false );    
         this.logToDebug(
           `Failed to get installation info when updating available current: ${e}`,
         );
@@ -421,7 +434,7 @@ export class ProCharger extends Homey.Device {
     const tokens = {
       charging: newMode === ChargerOperationMode.Connected_Charging,
       car_connected: newModeConnected,
-      current_limit: this.getCapabilityValue('available_installation_current'),
+      current_limit: Number(this.getCapabilityValue('available_installation_current')),
     };
 
     // Entering charging state => Charging starts

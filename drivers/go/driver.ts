@@ -112,6 +112,9 @@ class GoDriver extends Homey.Driver {
             username,
             password,
           },
+          store: {
+            installationAvailable: true,
+          },
         })) || []
       );
     });

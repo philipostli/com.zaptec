@@ -112,6 +112,9 @@ class HomeDriver extends Homey.Driver {
             username,
             password,
           },
+          store: {
+            installationAvailable: true,
+          },
         })) || []
       );
     });

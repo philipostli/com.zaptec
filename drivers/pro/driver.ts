@@ -113,7 +113,8 @@ class ProDriver extends Homey.Driver {
             password,
           },
           store: {
-            installationAvailable: true,}
+            installationAvailable: true,
+          },
         })) || []
       );
     });

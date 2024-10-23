@@ -219,6 +219,9 @@ export class ProCharger extends Homey.Device {
       .then((installation) => {
         if (installation.Id === this.getData().installationId)
           this.setStoreValue('installationAvailable', true );
+      })
+      .catch((e) => {
+        this.logToDebug(`Failed to poll installation: ${e}`);
       });
 
     this.api
@@ -433,7 +436,7 @@ export class ProCharger extends Homey.Device {
     const tokens = {
       charging: newMode === ChargerOperationMode.Connected_Charging,
       car_connected: newModeConnected,
-      current_limit: this.getCapabilityValue('available_installation_current'),
+      current_limit: Number(this.getCapabilityValue('available_installation_current')),
     };
 
     // Entering charging state => Charging starts
