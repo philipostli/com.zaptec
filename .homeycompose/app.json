@@ -5,8 +5,7 @@
   "sdk": 3,
   "brandColor": "#19312F",
   "platforms": [
-    "local",
-    "cloud"
+    "local"
   ],
   "name": {
     "en": "Zaptec"
