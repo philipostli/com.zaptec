@@ -30,6 +30,7 @@ export class ProCharger extends Homey.Device {
     );
 
     await this.migrateCapabilities();
+    await this.migrateSettings();
     this.registerCapabilityListeners();
 
     this.cronTasks.push(
@@ -42,6 +43,29 @@ export class ProCharger extends Homey.Device {
     this.pollSlowValues();
 
     this.log('ProCharger has been initialized');
+  }
+
+  /**
+   * Migrate settings from the old settings format to the new one.
+   * If the deviceid setting is empty, poll the charger info and store the device id.
+   */
+  private async migrateSettings() {
+    if (this.api === undefined) return;
+
+    if (this.getSetting('deviceid') === ""){
+      await this.api.getCharger(this.getData().id)
+      .then((charger) => {    
+        this.setSettings({
+          deviceid: charger.DeviceId,
+        });
+      })
+      .then(() => {
+        this.logToDebug(`Got charger info - added device id`);
+      })
+      .catch((e) => {
+        this.logToDebug(`Failed to poll charger info: ${e}`);
+      });
+    }
   }
 
   /**
@@ -59,6 +83,7 @@ export class ProCharger extends Homey.Device {
     const add = [
       'measure_temperature',
       'measure_humidity',
+      'cable_permanent_lock',
     ];
 
     for (const cap of add)
@@ -73,6 +98,12 @@ export class ProCharger extends Homey.Device {
       if (value) await this.startCharging();
       else await this.stopCharging();
     });
+
+    this.registerCapabilityListener('cable_permanent_lock', async (value) => {
+      if (value) await this.lockCable(true);
+      else await this.lockCable(false);
+    });
+
   }
 
   /**
@@ -330,10 +361,23 @@ export class ProCharger extends Homey.Device {
         );
         break;
 
+      case SmartDeviceObservation.SmartComputerSoftwareApplicationVersion:
+        await this.setSettings({
+          firmware: state.ValueAsString,
+        });
+        break;
+
       // The data for the previous session is JSON stringified into this state
       // variable
       case SmartDeviceObservation.CompletedSession:
         if (state.ValueAsString) await this.onLastSession(state.ValueAsString);
+        break;
+
+      case SmartDeviceObservation.PermanentCableLock:
+        await this.setCapabilityValue(
+          'cable_permanent_lock',
+          Number(state.ValueAsString) === 1 ? true : false,
+        );
         break;
 
       default:
@@ -536,6 +580,17 @@ export class ProCharger extends Homey.Device {
       .catch((e) => {
         this.logToDebug(`stopCharging failure: ${e}`);
         throw new Error(`Failed to turn off the charger: ${e}`);
+      });
+  }
+
+  public async lockCable(lockCable: boolean) {
+    if (this.api === undefined) throw new Error(`API not initialized!`);
+    return this.api
+      .lockCharger(this.getData().id, lockCable)
+      .then(() => true)
+      .catch((e) => {
+        this.logToDebug(`lockCable failure: ${e}`);
+        throw new Error(`Failed to lock/unlock cable: ${e}`);
       });
   }
 
