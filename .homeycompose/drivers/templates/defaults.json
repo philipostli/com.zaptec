@@ -6,7 +6,8 @@
     "xlarge": "{{driverAssetsPath}}/images/driver_xlarge.png"
   },
   "platforms": [
-    "local"
+    "local",
+    "cloud"
   ],
   "connectivity": [
     "cloud"
